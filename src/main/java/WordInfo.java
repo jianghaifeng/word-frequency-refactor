@@ -1,10 +1,10 @@
-public class Input {
+public class WordInfo {
     private String value;
     private int count;
 
-    public Input(String w, int i) {
-        this.value = w;
-        this.count = i;
+    public WordInfo(String word, int count) {
+        this.value = word;
+        this.count = count;
     }
 
     public String getValue() {

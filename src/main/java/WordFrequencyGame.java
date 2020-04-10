@@ -11,16 +11,11 @@ public class WordFrequencyGame {
     private static final String SPACE_DELIMITER = " ";
 
     public String getResult(String sentence) {
-        if (sentence.split(BLANK_SPACE_REGEX).length == 1) {
-            return sentence + " 1";
-        } else {
-            try {
-                List<WordInfo> wordInfoList = calculateWordFrequency(sentence);
-
-                return formatWordFrequencyResult(wordInfoList);
-            } catch (Exception e) {
-                return "Calculate Error";
-            }
+        try {
+            List<WordInfo> wordInfoList = calculateWordFrequency(sentence);
+            return formatWordFrequencyResult(wordInfoList);
+        } catch (Exception e) {
+            return "Calculate Error";
         }
     }
 

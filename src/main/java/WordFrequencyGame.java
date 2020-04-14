@@ -12,41 +12,45 @@ public class WordFrequencyGame {
     private static final String SPACE_DELIMITER = " ";
 
     public String getResult(String sentence) {
-        if (sentence.split(SPACE_PATTERN).length == 1) {
-            return sentence + " 1";
-        } else {
-            try {
-                //split the input string with 1 to n pieces of spaces
-                String[] words = sentence.split(SPACE_PATTERN);
-
-                List<WordInfo> wordInfoList = new ArrayList<>();
-                for (String word : words) {
-                    WordInfo wordInfo = new WordInfo(word, 1);
-                    wordInfoList.add(wordInfo);
-                }
-
-                //get the map for the next step of sizing the same word
-                Map<String, List<WordInfo>> map = getMap(wordInfoList);
-
-                List<WordInfo> list = new ArrayList<>();
-                for (Map.Entry<String, List<WordInfo>> entry : map.entrySet()) {
-                    WordInfo wordInfo = new WordInfo(entry.getKey(), entry.getValue().size());
-                    list.add(wordInfo);
-                }
-                wordInfoList = list;
-
-                wordInfoList.sort((firstWordInfo, secondWordInfo) -> secondWordInfo.getWordCount() - firstWordInfo.getWordCount());
-
-                StringJoiner joiner = new StringJoiner(NEWLINE_DELIMITER);
-                for (WordInfo wordInfo : wordInfoList) {
-                    String wordWithCount = wordInfo.getWord() + SPACE_DELIMITER + wordInfo.getWordCount();// "is 2"
-                    joiner.add(wordWithCount);
-                }
-                return joiner.toString();
-            } catch (Exception exception) {
-                return CALCULATE_ERROR;
-            }
+        try {
+            List<WordInfo> wordInfoList = calculateWordFrequency(sentence);
+            return formatWordFrequencyResult(wordInfoList);
+        } catch (Exception exception) {
+            return CALCULATE_ERROR;
         }
+    }
+
+    private List<WordInfo> calculateWordFrequency(String sentence) {
+        //split the input string with 1 to n pieces of spaces
+        String[] words = sentence.split(SPACE_PATTERN);
+
+        List<WordInfo> wordInfoList = new ArrayList<>();
+        for (String word : words) {
+            WordInfo wordInfo = new WordInfo(word, 1);
+            wordInfoList.add(wordInfo);
+        }
+
+        //get the map for the next step of sizing the same word
+        Map<String, List<WordInfo>> map = getMap(wordInfoList);
+
+        List<WordInfo> list = new ArrayList<>();
+        for (Map.Entry<String, List<WordInfo>> entry : map.entrySet()) {
+            WordInfo wordInfo = new WordInfo(entry.getKey(), entry.getValue().size());
+            list.add(wordInfo);
+        }
+        wordInfoList = list;
+
+        wordInfoList.sort((firstWordInfo, secondWordInfo) -> secondWordInfo.getWordCount() - firstWordInfo.getWordCount());
+        return wordInfoList;
+    }
+
+    private String formatWordFrequencyResult(List<WordInfo> wordInfoList) {
+        StringJoiner joiner = new StringJoiner(NEWLINE_DELIMITER);
+        for (WordInfo wordInfo : wordInfoList) {
+            String wordWithCount = wordInfo.getWord() + SPACE_DELIMITER + wordInfo.getWordCount();// "is 2"
+            joiner.add(wordWithCount);
+        }
+        return joiner.toString();
     }
 
     private Map<String, List<WordInfo>> getMap(List<WordInfo> wordInfoList) {

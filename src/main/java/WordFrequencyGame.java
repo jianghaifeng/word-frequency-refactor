@@ -1,7 +1,8 @@
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.StringJoiner;
 
 public class WordFrequencyGame {
@@ -21,25 +22,12 @@ public class WordFrequencyGame {
     }
 
     private List<WordInfo> calculateWordFrequency(String sentence) {
-        //split the input string with 1 to n pieces of spaces
-        String[] words = sentence.split(SPACE_PATTERN);
-
+        List<String> words = Arrays.asList(sentence.split(SPACE_PATTERN));
         List<WordInfo> wordInfoList = new ArrayList<>();
-        for (String word : words) {
-            WordInfo wordInfo = new WordInfo(word, 1);
-            wordInfoList.add(wordInfo);
+        for (String word : new HashSet<>(words)) {
+            int count = Collections.frequency(words, word);
+            wordInfoList.add(new WordInfo(word, count));
         }
-
-        //get the map for the next step of sizing the same word
-        Map<String, List<WordInfo>> map = getMap(wordInfoList);
-
-        List<WordInfo> list = new ArrayList<>();
-        for (Map.Entry<String, List<WordInfo>> entry : map.entrySet()) {
-            WordInfo wordInfo = new WordInfo(entry.getKey(), entry.getValue().size());
-            list.add(wordInfo);
-        }
-        wordInfoList = list;
-
         wordInfoList.sort((firstWordInfo, secondWordInfo) -> secondWordInfo.getWordCount() - firstWordInfo.getWordCount());
         return wordInfoList;
     }
@@ -51,19 +39,5 @@ public class WordFrequencyGame {
             joiner.add(wordWithCount);
         }
         return joiner.toString();
-    }
-
-    private Map<String, List<WordInfo>> getMap(List<WordInfo> wordInfoList) {
-        Map<String, List<WordInfo>> map = new HashMap<>();
-        for (WordInfo wordInfo : wordInfoList) {
-            if (!map.containsKey(wordInfo.getWord())) {
-                ArrayList<WordInfo> arr = new ArrayList<>();
-                arr.add(wordInfo);
-                map.put(wordInfo.getWord(), arr);
-            } else {
-                map.get(wordInfo.getWord()).add(wordInfo);
-            }
-        }
-        return map;
     }
 }

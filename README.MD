@@ -3,3 +3,4 @@
 3. Magic string & number
 4. Rename
 5. Extract method
+6. Optimize logic
